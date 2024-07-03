@@ -3,8 +3,11 @@ import pandas as pd
 import socket
 
 # Read the Excel file
-file_path = 'C:\Users\Steven\Desktop\Tests\Book.xlsx'
+file_path = 'C:\\Users\\Steven\\Desktop\\Tests\\Book.xlsx'
 df = pd.read_excel(file_path)
+
+# Initialize a list to store ratings
+ratings = []
 
 # Iterate over each row in the DataFrame
 for index, row in df.iterrows():
@@ -14,6 +17,7 @@ for index, row in df.iterrows():
     # Skip rows with empty IP address
     if pd.isna(expected_ip):
         print(f"Skipping {hostname} due to empty IP address")
+        ratings.append(0)
         continue
 
     try:
@@ -26,9 +30,20 @@ for index, row in df.iterrows():
         # Check if the IP addresses match
         if actual_ip == expected_ip and actual_hostname == hostname:
             print(f"Match: {hostname} - {expected_ip}")
+            ratings.append(10)
         else:
             print(f"Mismatch: {hostname} - Expected: {expected_ip}, Got: {actual_ip}, Resolved Hostname: {actual_hostname}")
+            ratings.append(0)
     except socket.gaierror as e:
         print(f"Error: Could not resolve {hostname} or {expected_ip} - {e}")
+        ratings.append(0)
     except socket.herror as e:
         print(f"Error: Could not resolve {expected_ip} to a hostname - {e}")
+        ratings.append(0)
+
+# Add the ratings to the DataFrame
+df['rating'] = ratings
+
+# Save the DataFrame to a new Excel file
+output_file_path = 'C:\\Users\\Steven\\Desktop\\Tests\\Book_with_ratings.xlsx'
+df.to_excel(output_file_path, index=False)
