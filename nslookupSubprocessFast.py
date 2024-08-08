@@ -5,11 +5,17 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 # Read the Excel file
 file_path = 'C:\\Users\\WE21927\\DJProject\\Project02\\checkpoint-objects.xlsx'
 df = pd.read_excel(file_path)
+
+
 # Rename the columns
 df.columns = ['Name', 'IPv4 address'] + list(df.columns[2:])
+
+
 # Initialize lists to store ratings
 ratings_col1 = [0] * len(df)
 ratings_col2 = [0] * len(df)
+
+
 def nslookup(domain, index, col):
     try:
         result = subprocess.run(['nslookup', domain], capture_output=True, text=True)
@@ -21,6 +27,7 @@ def nslookup(domain, index, col):
     except Exception as e:
         print(f"Error performing nslookup on {domain}: {e}")
         return (index, col, 0)
+    
 # Perform nslookup on the first and second columns in parallel
 with ThreadPoolExecutor(max_workers=10) as executor:
     futures = []
@@ -34,10 +41,16 @@ with ThreadPoolExecutor(max_workers=10) as executor:
             ratings_col1[index] = rating
         else:
             ratings_col2[index] = rating
+
+
 # Add ratings to the DataFrame
 df['Rating-Col1'] = ratings_col1
 df['Rating-Col2'] = ratings_col2
+
+
 # Create a new column that adds the values from Rating_Col1 and Rating_Col2
 df['Total-Rating'] = df['Rating-Col1'] + df['Rating-Col2']
+
+
 # Save the updated DataFrame to a new Excel file
 df.to_excel('C:\\Users\\WE21927\\DJProject\\Project02\\result.xlsx', index=False)
