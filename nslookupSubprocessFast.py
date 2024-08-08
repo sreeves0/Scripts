@@ -3,7 +3,7 @@ import subprocess
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 # Read the Excel file
-file_path = 'C:\\Users\\WE21927\\DJProject\\Project02\\checkpoint-objects.xlsx'
+file_path = ''
 df = pd.read_excel(file_path)
 
 
@@ -53,4 +53,4 @@ df['Total-Rating'] = df['Rating-Col1'] + df['Rating-Col2']
 
 
 # Save the updated DataFrame to a new Excel file
-df.to_excel('C:\\Users\\WE21927\\DJProject\\Project02\\result.xlsx', index=False)
+df.to_excel('', index=False)
